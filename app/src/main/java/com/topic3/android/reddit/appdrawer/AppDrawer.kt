@@ -122,11 +122,9 @@ private fun ProfileInfoItem(
 ) {
   //TODO add your code here
   val colors = MaterialTheme.colors
-
   ConstraintLayout(modifier = Modifier) {
-    val (iconRef, aamountRef, titleRef) = createRefs()
+    val (iconRef, amountRef, titleRef) = createRefs()
     val itemModifier = Modifier
-
     Icon(
       contentDescription = stringResource(id = textResourceId),
       imageVector = iconAsset,
@@ -138,112 +136,141 @@ private fun ProfileInfoItem(
         }
         .padding(start = 16.dp)
     )
-  }
-}
 
-/**
- * Представляет действия drawer приложения:
- * * экранная навигация
- * * светлый/темный режим приложения
- */
-@Composable
-private fun AppDrawerBody(closeDrawerAction: () -> Unit) {
-  //TODO add your code here
-  Column{
-    ScreenNavigationButton(
-      icon = Icons.Filled.AccountBox ,
-      label = stringResource(R.string.my_profile),
-      onClickAction = { closeDrawerAction()
-      }
+    Text(
+      text = stringResource(amountResourceId),
+      color = colors.primaryVariant,
+      fontSize = 10.sp,
+      modifier = itemModifier
+        .padding(start = 8.dp)
+        .constrainAs(amountRef){
+          top.linkTo(iconRef.top)
+          start.linkTo(iconRef.end)
+          bottom.linkTo(titleRef.top)
+        }
     )
-    ScreenNavigationButton(
-      icon = Icons.Filled.Home,
-      label = stringResource(R.string.saved),
-      onClickAction = { closeDrawerAction()
-      }
-    )
+    Text(
+      text = stringResource(id = amountResourceId),
+      color = colors.primaryVariant,
+      text = stringResource(textResourceId),
+      color = Color.Gray,
+      fontSize = 10.sp,
+      modifier = itemModifier
+        .padding(start = 8.dp)
+        .constrainAs(amountRef) {
+          top.linkTo(iconRef.top)
+            .constrainAs(titleRef) {
+              top.linkTo(amountRef.bottom)
+              start.linkTo(iconRef.end)
+              bottom.linkTo(titleRef.top)
+              bottom.linkTo(iconRef.bottom)
+            }
+
+          )
+        }
   }
-}
-/**
- * Представляет компонент в панели приложений, который пользователь может использовать для смены экрана.
- */
-@Composable
-private fun ScreenNavigationButton(
-  icon: ImageVector,
-  label: String,
-  onClickAction: () -> Unit,
-  modifier: Modifier = Modifier
-) {
-  val colors = MaterialTheme.colors
-  val surfaceModifier = modifier
-    .padding(start = 8.dp, top = 8.dp, end = 8.dp)
-    .fillMaxWidth()
-  Surface(
-    modifier = surfaceModifier,
-    color = colors.surface,
-    shape = MaterialTheme.shapes.small
+  /**
+   * Представляет действия drawer приложения:
+   * * экранная навигация
+   * * светлый/темный режим приложения
+   */
+  @Composable
+  private fun AppDrawerBody(closeDrawerAction: () -> Unit) {
+    //TODO add your code here
+    Column{
+      ScreenNavigationButton(
+        icon = Icons.Filled.AccountBox ,
+        label = stringResource(R.string.my_profile),
+        onClickAction = { closeDrawerAction()
+        }
+      )
+      ScreenNavigationButton(
+        icon = Icons.Filled.Home,
+        label = stringResource(R.string.saved),
+        onClickAction = { closeDrawerAction()
+        }
+      )
+    }
+  }
+  /**
+   * Представляет компонент в панели приложений, который пользователь может использовать для смены экрана.
+   */
+  @Composable
+  private fun ScreenNavigationButton(
+    icon: ImageVector,
+    label: String,
+    onClickAction: () -> Unit,
+    modifier: Modifier = Modifier
   ) {
-    TextButton(
-      onClick = onClickAction,
-      modifier = Modifier.fillMaxWidth()
+    val colors = MaterialTheme.colors
+    val surfaceModifier = modifier
+      .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+      .fillMaxWidth()
+    Surface(
+      modifier = surfaceModifier,
+      color = colors.surface,
+      shape = MaterialTheme.shapes.small
     ) {
-      Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
+      TextButton(
+        onClick = onClickAction,
         modifier = Modifier.fillMaxWidth()
       ) {
-        Image(
-          imageVector = icon,
-          colorFilter = ColorFilter.tint(Color.Gray),
-          contentDescription = label
-        )
-        Spacer(Modifier.width(16.dp))
-        Text(
-          fontSize = 10.sp,
-          text = label,
-          style = MaterialTheme.typography.body2,
-          color = colors.primaryVariant
-        )
+        Row(
+          horizontalArrangement = Arrangement.Start,
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier.fillMaxWidth()
+        ) {
+          Image(
+            imageVector = icon,
+            colorFilter = ColorFilter.tint(Color.Gray),
+            contentDescription = label
+          )
+          Spacer(Modifier.width(16.dp))
+          Text(
+            fontSize = 10.sp,
+            text = label,
+            style = MaterialTheme.typography.body2,
+            color = colors.primaryVariant
+          )
+        }
       }
     }
   }
-}
-/**
- * Представляет компонент настройки в панели приложений.
- */
-@Composable
-private fun AppDrawerFooter(modifier: Modifier = Modifier) {
-  //TODO add your code here
-  ConstraintLayout(
-    modifier = modifier
-  ) {
-    val colors = MaterialTheme.colors
-    val (settingsImage, settingsText, darkModeButton) = createRefs()
-    Icon(
-      imageVector = ImageVector.vectorResource(id = R.drawable.ic_moon),
-      contentDescription = stringResource(id = R.string.change_theme),
+  /**
+   * Представляет компонент настройки в панели приложений.
+   */
+  @Composable
+  private fun AppDrawerFooter(modifier: Modifier = Modifier) {
+    //TODO add your code here
+    ConstraintLayout(
       modifier = modifier
-        .clickable(onClick = { changeTheme() })
-        .constrainAs(darkModeButton){
+    ) {
+      val colors = MaterialTheme.colors
+      val (settingsImage, settingsText, darkModeButton) = createRefs()
+      Icon(
+        imageVector = ImageVector.vectorResource(id = R.drawable.ic_moon),
+        contentDescription = stringResource(id = R.string.change_theme),
+        modifier = modifier
+          .clickable(onClick = { changeTheme() })
           .constrainAs(darkModeButton) {
-          end.linkTo(parent.end)
-          bottom.linkTo(settingsImage.bottom)
-        },
-          tint = colors.primaryVariant
-          )
-          Text(
-            fontSize = 10.sp,
-            text = stringResource(R.string.settings),
-            style = MaterialTheme.typography.body2,
-            color = colors.primaryVariant,
-            modifier = modifier
-              .padding(start = 16.dp)
-              .constrainAs(settingsText) {
-                start.linkTo(settingsImage.end)
-                centerVerticallyTo(settingsImage)
-              }
-          )
-        }
+            end.linkTo(parent.end)
+            bottom.linkTo(settingsImage.bottom)
+          },
+        tint = colors.primaryVariant
+      )
+      Text(
+        fontSize = 10.sp,
+        text = stringResource(R.string.settings),
+        style = MaterialTheme.typography.body2,
+        color = colors.primaryVariant,
+        modifier = modifier
+          .padding(start = 16.dp)
+          .constrainAs(settingsText) {
+            start.linkTo(settingsImage.end)
+            centerVerticallyTo(settingsImage)
+          }
+      )
+    }
   }
   private fun changeTheme() {
     RedditThemeSettings.isInDarkTheme.value = RedditThemeSettings.isInDarkTheme.value.not()
