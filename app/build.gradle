@@ -33,6 +33,7 @@ android {
   buildFeatures {
     compose true
   }
+    namespace 'com.topic3.android.reddit'
 }
 
 dependencies {
